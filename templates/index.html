@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto Trend Dashboard</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #f4f4f4; margin: 0; padding: 24px; color: #222; }
+  main { max-width: 640px; margin: 0 auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,.1); }
+  h1 { margin-top: 0; }
+  pre { background: #f8f8f8; padding: 12px; border-radius: 6px; white-space: pre-wrap; min-height: 6em; }
+  button { padding: 10px 18px; font-size: 15px; border: 0; border-radius: 4px; background: #0b5cff; color: #fff; cursor: pointer; margin-right: 8px; }
+  #errors { color: #b00020; font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Crypto Trend Dashboard</h1>
+  <p>BTC / ETH / SOL prices and the top coins per sector, from CoinGecko.</p>
+  <pre id="post">Loading…</pre>
+  <button id="refresh">Refresh</button>
+  <button id="copy">Copy text</button>
+  <p id="errors"></p>
+</main>
+<script>
+const post = document.getElementById('post');
+const errors = document.getElementById('errors');
+
+async function load() {
+  post.textContent = 'Loading…';
+  errors.textContent = '';
+  try {
+    const res = await fetch('/api/summary');
+    const data = await res.json();
+    post.textContent = data.post || 'No data available.';
+    errors.textContent = data.errors.join(' | ');
+  } catch (e) {
+    post.textContent = 'Could not reach the server.';
+  }
+}
+
+document.getElementById('refresh').onclick = load;
+document.getElementById('copy').onclick = () =>
+  navigator.clipboard.writeText(post.textContent).catch(() => {});
+load();
+</script>
+</body>
+</html>
