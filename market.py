@@ -140,6 +140,7 @@ class UpstreamError(Exception):
 
 
 _cache = {}
+_key_locks = {}
 _lock = threading.Lock()
 _blocked_until = 0.0
 _stale_log = contextvars.ContextVar("stale_log", default=None)
@@ -165,41 +166,49 @@ def _retry_after(response):
 
 
 def _get(path, params):
+    """Cached GET. Requests for the same key are serialised: when several callers ask at the
+    same moment, one goes to CoinGecko and the others wait and reuse its answer."""
     global _blocked_until
     key = (path, tuple(sorted(params.items())))
     with _lock:
         hit = _cache.get(key)
-        blocked = _blocked_until - time.time()
+        key_lock = _key_locks.setdefault(key, threading.Lock())
     if hit and time.time() - hit[0] < CACHE_TTL:
         return hit[1]
+    with key_lock:
+        with _lock:
+            hit = _cache.get(key)
+            blocked = _blocked_until - time.time()
+        if hit and time.time() - hit[0] < CACHE_TTL:  # someone else just refreshed it
+            return hit[1]
 
-    def stale():
-        log = _stale_log.get()
-        if log is not None:
-            log.append(path)
-        return hit[1]
+        def stale():
+            log = _stale_log.get()
+            if log is not None:
+                log.append(path)
+            return hit[1]
 
-    if blocked > 0:  # recently rate limited: do not hammer the API
-        if hit:
-            return stale()
-        raise UpstreamError(f"CoinGecko is rate limiting requests; retry in {int(blocked) + 1}s")
-    try:
-        resp = requests.get(f"{_base_url()}{path}", params=params, timeout=TIMEOUT, headers=_headers())
-        resp.raise_for_status()
-        data = resp.json()
-    except (requests.RequestException, ValueError) as exc:
-        response = getattr(exc, "response", None)
-        status = getattr(response, "status_code", None)
-        if status == 429:
-            with _lock:
-                _blocked_until = time.time() + _retry_after(response)
-        if hit:  # serve stale data rather than failing (e.g. on HTTP 429)
-            return stale()
-        reason = f"HTTP {status}" if status else type(exc).__name__
-        raise UpstreamError(f"CoinGecko {path} failed ({reason})") from exc
-    with _lock:
-        _cache[key] = (time.time(), data)
-    return data
+        if blocked > 0:  # recently rate limited: do not hammer the API
+            if hit:
+                return stale()
+            raise UpstreamError(f"CoinGecko is rate limiting requests; retry in {int(blocked) + 1}s")
+        try:
+            resp = requests.get(f"{_base_url()}{path}", params=params, timeout=TIMEOUT, headers=_headers())
+            resp.raise_for_status()
+            data = resp.json()
+        except (requests.RequestException, ValueError) as exc:
+            response = getattr(exc, "response", None)
+            status = getattr(response, "status_code", None)
+            if status == 429:
+                with _lock:
+                    _blocked_until = time.time() + _retry_after(response)
+            if hit:  # serve stale data rather than failing (e.g. on HTTP 429)
+                return stale()
+            reason = f"HTTP {status}" if status else type(exc).__name__
+            raise UpstreamError(f"CoinGecko {path} failed ({reason})") from exc
+        with _lock:
+            _cache[key] = (time.time(), data)
+        return data
 
 
 def clear_cache():
@@ -282,6 +291,77 @@ def fetch_sector(category_id):
         "per_page": _coins_per_sector(),
         "page": 1,
     })
+
+
+MOCK_OVERVIEW = {"total_market_cap": 2.55e12, "total_volume": 9.1e10, "market_cap_change_24h": 0.8,
+                 "btc_dominance": 52.3, "eth_dominance": 14.8, "active_coins": 14000, "updated_at": None}
+MOCK_TRENDING = [
+    {"id": "sample-a", "name": "Sample trending A", "symbol": "TRA", "rank": 120, "change_24h": 18.4},
+    {"id": "sample-b", "name": "Sample trending B", "symbol": "TRB", "rank": 340, "change_24h": -6.2},
+    {"id": "sample-c", "name": "Sample trending C", "symbol": "TRC", "rank": 55, "change_24h": 3.1},
+]
+
+
+def overview_enabled():
+    return os.environ.get("OVERVIEW", "1") != "0"
+
+
+def fetch_overview():
+    """Whole-market figures from CoinGecko's /global endpoint, or None when the response has
+    no usable total. Values the response lacks are None."""
+    if mock_enabled():
+        return dict(MOCK_OVERVIEW)
+    payload = _get("/global", {})
+    data = payload.get("data") if isinstance(payload, dict) else None
+    if not isinstance(data, dict):
+        return None
+    caps, volumes, share = data.get("total_market_cap"), data.get("total_volume"), data.get("market_cap_percentage")
+    caps, volumes, share = (x if isinstance(x, dict) else {} for x in (caps, volumes, share))
+    overview = {
+        "total_market_cap": _num(caps.get("usd")),
+        "total_volume": _num(volumes.get("usd")),
+        "market_cap_change_24h": _num(data.get("market_cap_change_percentage_24h_usd")),
+        "btc_dominance": _num(share.get("btc")),
+        "eth_dominance": _num(share.get("eth")),
+        "active_coins": data.get("active_cryptocurrencies") if isinstance(data.get("active_cryptocurrencies"), int) else None,
+        "updated_at": data.get("updated_at") if isinstance(data.get("updated_at"), int) else None,
+    }
+    return overview if overview["total_market_cap"] is not None else None
+
+
+def fetch_trending(count=7):
+    """Coins CoinGecko lists as trending right now: id, name, ticker, market cap rank, 24h change."""
+    if mock_enabled():
+        return [dict(c) for c in MOCK_TRENDING][:count]
+    payload = _get("/search/trending", {})
+    entries = payload.get("coins") if isinstance(payload, dict) else None
+    out = []
+    for entry in (entries or [])[:count]:
+        item = entry.get("item") if isinstance(entry, dict) else None
+        if not isinstance(item, dict) or not item.get("symbol"):
+            continue
+        change = ((item.get("data") or {}).get("price_change_percentage_24h") or {})
+        out.append({"id": item.get("id"), "name": item.get("name"), "symbol": str(item["symbol"]).upper(),
+                    "rank": item.get("market_cap_rank") if isinstance(item.get("market_cap_rank"), int) else None,
+                    "change_24h": _num(change.get("usd")) if isinstance(change, dict) else None})
+    return out
+
+
+def alert_threshold():
+    """Percent move that counts as a big move (ALERT_THRESHOLD, default 5, allowed 0.5 to 100)."""
+    try:
+        return min(100.0, max(0.5, float(os.environ.get("ALERT_THRESHOLD", "5"))))
+    except ValueError:
+        return 5.0
+
+
+def alerts(headline, details, threshold=None, limit=10):
+    """Coins whose 24h move is at least `threshold` percent in either direction, biggest first."""
+    threshold = alert_threshold() if threshold is None else threshold
+    big = [c for c in _unique_coins(headline, details) if c["change_24h"] is not None and abs(c["change_24h"]) >= threshold]
+    big.sort(key=lambda c: abs(c["change_24h"]), reverse=True)
+    return [{"symbol": c["symbol"], "name": c["name"], "change_24h": c["change_24h"], "sector": c["sector"],
+             "direction": "up" if c["change_24h"] > 0 else "down"} for c in big[:limit]]
 
 
 def sector_symbols(rows):
@@ -428,6 +508,34 @@ def format_line(name, price, change):
     return f"{arrow} {name} {format_price(price)} ({pct})"
 
 
+def format_big(number):
+    """$2.55T, $91.0B, $4.2M"""
+    if number is None:
+        return "n/a"
+    for limit, suffix in ((1e12, "T"), (1e9, "B"), (1e6, "M")):
+        if abs(number) >= limit:
+            return f"${number / limit:,.2f}{suffix}" if suffix == "T" else f"${number / limit:,.1f}{suffix}"
+    return f"${number:,.0f}"
+
+
+def _overview_line(overview):
+    if not overview or overview.get("total_market_cap") is None:
+        return None
+    line = f"Total market cap {format_big(overview['total_market_cap'])}"
+    if overview.get("market_cap_change_24h") is not None:
+        line += f" ({overview['market_cap_change_24h']:+.1f}% 24h)"
+    if overview.get("btc_dominance") is not None:
+        line += f", BTC dominance {overview['btc_dominance']:.1f}%"
+    return line
+
+
+def _alerts_line(alert_list, threshold):
+    if not alert_list:
+        return None
+    moves = ", ".join(f"{a['symbol']} {a['change_24h']:+.1f}%" for a in alert_list[:6])
+    return f"Big moves ({threshold:g}%+ in 24h): {moves}"
+
+
 def _headline_label():
     return "BTC/ETH/SOL" if HEADLINE_IDS == DEFAULT_HEADLINE else "headline assets"
 
@@ -437,18 +545,24 @@ def _hottest(stats):
     return max(ranked, key=lambda item: item[1]) if ranked else None
 
 
-def build_post(prices, sectors, stats=None):
+def build_post(prices, sectors, stats=None, overview=None, alert_list=None, threshold=None):
     """Plain-text market update, ready to paste."""
     lines = []
     for name, cid in HEADLINE_IDS.items():
         if cid in prices and prices[cid].get("usd") is not None:
             lines.append(format_line(prices[cid].get("name") or name, prices[cid]["usd"], prices[cid].get("usd_24h_change")))
+    market_line = _overview_line(overview)
+    if market_line:
+        lines += ["", market_line]
     mood = sentiment(prices)
     if mood:
         lines += ["", f"24h sentiment across {_headline_label()}: {mood}"]
     hottest = _hottest(stats)
     if hottest:
         lines.append(f"Strongest sector (average 24h change): {hottest[0]} {hottest[1]:+.1f}%")
+    big = _alerts_line(alert_list, alert_threshold() if threshold is None else threshold)
+    if big:
+        lines.append(big)
     lines.append("")
     for name, coins in sectors.items():
         if coins:
@@ -456,19 +570,25 @@ def build_post(prices, sectors, stats=None):
     return "\n".join(lines)
 
 
-def build_markdown(prices, sectors, stats=None):
+def build_markdown(prices, sectors, stats=None, overview=None, alert_list=None, threshold=None):
     """The same update as Markdown, for chats and docs that render it."""
     lines = ["**Crypto market update**", ""]
     for name, cid in HEADLINE_IDS.items():
         if cid in prices and prices[cid].get("usd") is not None:
             label = "**" + (prices[cid].get("name") or name) + "**"
             lines.append("- " + format_line(label, prices[cid]["usd"], prices[cid].get("usd_24h_change")))
+    market_line = _overview_line(overview)
+    if market_line:
+        lines += ["", market_line]
     mood = sentiment(prices)
     if mood:
         lines += ["", f"24h sentiment across {_headline_label()}: **{mood}**"]
     hottest = _hottest(stats)
     if hottest:
         lines.append(f"Strongest sector (average 24h change): **{hottest[0]}** {hottest[1]:+.1f}%")
+    big = _alerts_line(alert_list, alert_threshold() if threshold is None else threshold)
+    if big:
+        lines.append(big)
     rows = [f"- **{name}:** {', '.join(coins)}" for name, coins in sectors.items() if coins]
     if rows:
         lines += ["", *rows]
@@ -510,11 +630,25 @@ def build_summary():
             prices, errors = {}, [str(exc)]
         details, sector_errors = build_sector_details()
         errors += sector_errors
+        overview, trending = None, []
+        if overview_enabled():
+            for label, fetch in (("overview", fetch_overview), ("trending", fetch_trending)):
+                try:
+                    value = fetch()
+                except UpstreamError as exc:
+                    errors.append(str(exc))
+                    continue
+                if label == "overview":
+                    overview = value
+                else:
+                    trending = value
     finally:
         _stale_log.reset(token)
     headline = headline_list(prices)
     stats = sector_stats(details)
     sectors = {name: [c["symbol"] for c in coins] for name, coins in details.items()}
+    threshold = alert_threshold()
+    big_moves = alerts(headline, details, threshold)
     return {
         "ok": bool(prices or any(details.values())),
         "mock": mock_enabled(),
@@ -529,7 +663,10 @@ def build_summary():
         "sector_details": details,
         "sector_stats": stats,
         "movers": movers(headline, details),
-        "post": build_post(prices, sectors, stats),
-        "post_markdown": build_markdown(prices, sectors, stats),
+        "overview": overview,
+        "trending": trending,
+        "alerts": {"threshold": threshold, "coins": big_moves},
+        "post": build_post(prices, sectors, stats, overview, big_moves, threshold),
+        "post_markdown": build_markdown(prices, sectors, stats, overview, big_moves, threshold),
         "errors": errors,
     }
