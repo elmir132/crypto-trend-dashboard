@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crypto Trend Dashboard</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ static_base }}style.css">
 </head>
-<body>
+<body data-demo="{{ 'true' if demo else 'false' }}">
 <main>
   <header class="top">
     <div>
@@ -32,6 +32,11 @@
     <div id="headline" class="cards"></div>
   </section>
 
+  <section aria-labelledby="h-overview">
+    <h2 id="h-overview">Whole market</h2>
+    <div id="overview" class="cards"></div>
+  </section>
+
   <section aria-labelledby="h-mood">
     <h2 id="h-mood">Mood</h2>
     <div id="mood" class="panel"></div>
@@ -45,7 +50,14 @@
 
   <section aria-labelledby="h-movers">
     <h2 id="h-movers">Biggest moves (24h)</h2>
+    <div id="alerts" class="panel"></div>
     <div id="movers" class="two"></div>
+  </section>
+
+  <section aria-labelledby="h-trending">
+    <h2 id="h-trending">Trending on CoinGecko</h2>
+    <p class="muted small">Coins people are searching for right now. Trending is attention, not a recommendation.</p>
+    <div id="trending" class="panel"></div>
   </section>
 
   <section aria-labelledby="h-history">
@@ -69,6 +81,6 @@
     Data from CoinGecko's public API. This describes recent price movement of the coins shown; it is not a forecast, a trading signal or investment advice.
   </footer>
 </main>
-<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script src="{{ static_base }}app.js"></script>
 </body>
 </html>

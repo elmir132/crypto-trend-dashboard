@@ -35,7 +35,7 @@ def create_app(history_store=None):
 
     @app.route("/")
     def index():
-        return render_template("index.html")
+        return render_template("index.html", static_base="/static/", demo=False)
 
     @app.route("/api/summary")
     def summary():

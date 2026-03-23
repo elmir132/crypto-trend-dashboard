@@ -1,0 +1,945 @@
+{
+ "alerts": {
+  "coins": [
+   {
+    "change_24h": 9.1,
+    "direction": "up",
+    "name": "Sample coin MEM4",
+    "sector": "Memes",
+    "symbol": "MEM4"
+   },
+   {
+    "change_24h": 6.5,
+    "direction": "up",
+    "name": "Sample coin MEM1",
+    "sector": "Memes",
+    "symbol": "MEM1"
+   }
+  ],
+  "threshold": 5.0
+ },
+ "breadth": {
+  "down": 11,
+  "flat": 0,
+  "share_up": 0.667,
+  "total": 33,
+  "up": 22
+ },
+ "cache_ttl": 120,
+ "errors": [],
+ "generated_at": "2026-10-13T19:11:44+00:00",
+ "headline": [
+  {
+   "change_1h": 0.1,
+   "change_24h": 1.8,
+   "change_7d": 4.2,
+   "id": "bitcoin",
+   "market_cap": 1260000000000.0,
+   "name": "Bitcoin",
+   "price": 64250.0,
+   "sparkline": [
+    61500.0,
+    61758.28,
+    61986.31,
+    62158.62,
+    62258.54,
+    62280.81,
+    62232.45,
+    62131.62,
+    62004.77,
+    61882.46,
+    61794.52,
+    61765.37,
+    61810.13,
+    61932.27,
+    62123.03,
+    62362.83,
+    62624.33,
+    62876.78,
+    63090.85,
+    63243.26,
+    63320.5,
+    63320.88,
+    63254.89,
+    63143.46,
+    63014.71,
+    62899.51,
+    62826.56,
+    62817.92,
+    62885.47,
+    63029.08,
+    63236.61,
+    63485.81,
+    63747.88,
+    63991.96,
+    64190.06,
+    64321.41,
+    64375.83,
+    64355.23,
+    64273.4,
+    64153.8,
+    64025.82,
+    63920.21
+   ],
+   "symbol": "BTC",
+   "volume": 24000000000.0
+  },
+  {
+   "change_1h": -0.2,
+   "change_24h": -0.6,
+   "change_7d": -1.5,
+   "id": "ethereum",
+   "market_cap": 375000000000.0,
+   "name": "Ethereum",
+   "price": 3120.5,
+   "sparkline": [
+    3170.0,
+    3183.67,
+    3195.0,
+    3202.02,
+    3203.44,
+    3198.86,
+    3188.82,
+    3174.72,
+    3158.61,
+    3142.85,
+    3129.75,
+    3121.2,
+    3118.36,
+    3121.5,
+    3129.95,
+    3142.18,
+    3156.1,
+    3169.32,
+    3179.57,
+    3185.05,
+    3184.72,
+    3178.45,
+    3167.04,
+    3152.13,
+    3135.87,
+    3120.66,
+    3108.72,
+    3101.75,
+    3100.67,
+    3105.47,
+    3115.22,
+    3128.18,
+    3142.14,
+    3154.71,
+    3163.73,
+    3167.58,
+    3165.49,
+    3157.59,
+    3144.96,
+    3129.41,
+    3113.22,
+    3098.75
+   ],
+   "symbol": "ETH",
+   "volume": 13000000000.0
+  },
+  {
+   "change_1h": 0.4,
+   "change_24h": 3.4,
+   "change_7d": 8.9,
+   "id": "solana",
+   "market_cap": 69000000000.0,
+   "name": "Solana",
+   "price": 148.2,
+   "sparkline": [
+    136.0,
+    137.35,
+    138.54,
+    139.42,
+    139.9,
+    139.95,
+    139.61,
+    138.98,
+    138.2,
+    137.45,
+    136.89,
+    136.66,
+    136.83,
+    137.43,
+    138.41,
+    139.66,
+    141.04,
+    142.36,
+    143.47,
+    144.24,
+    144.59,
+    144.52,
+    144.08,
+    143.39,
+    142.6,
+    141.89,
+    141.42,
+    141.3,
+    141.59,
+    142.32,
+    143.39,
+    144.69,
+    146.07,
+    147.34,
+    148.36,
+    149.02,
+    149.24,
+    149.06,
+    148.53,
+    147.8,
+    147.01,
+    146.36
+   ],
+   "symbol": "SOL",
+   "volume": 3100000000.0
+  }
+ ],
+ "mock": true,
+ "movers": {
+  "gainers": [
+   {
+    "change_24h": 9.1,
+    "name": "Sample coin MEM4",
+    "sector": "Memes",
+    "symbol": "MEM4"
+   },
+   {
+    "change_24h": 6.5,
+    "name": "Sample coin MEM1",
+    "sector": "Memes",
+    "symbol": "MEM1"
+   },
+   {
+    "change_24h": 4.4,
+    "name": "Sample coin ART4",
+    "sector": "AI",
+    "symbol": "ART4"
+   }
+  ],
+  "losers": [
+   {
+    "change_24h": -4.8,
+    "name": "Sample coin MEM2",
+    "sector": "Memes",
+    "symbol": "MEM2"
+   },
+   {
+    "change_24h": -3.4,
+    "name": "Sample coin GAM4",
+    "sector": "GameFi",
+    "symbol": "GAM4"
+   },
+   {
+    "change_24h": -2.6,
+    "name": "Sample coin DEP4",
+    "sector": "DePIN",
+    "symbol": "DEP4"
+   }
+  ]
+ },
+ "overview": {
+  "active_coins": 14000,
+  "btc_dominance": 52.3,
+  "eth_dominance": 14.8,
+  "market_cap_change_24h": 0.8,
+  "total_market_cap": 2550000000000.0,
+  "total_volume": 91000000000.0,
+  "updated_at": null
+ },
+ "post": "\u25b2 Bitcoin $64,250.00 (+1.8%)\n\u25bc Ethereum $3,120.50 (-0.6%)\n\u25b2 Solana $148.20 (+3.4%)\n\nTotal market cap $2.55T (+0.8% 24h), BTC dominance 52.3%\n\n24h sentiment across BTC/ETH/SOL: bullish\nStrongest sector (average 24h change): Memes +2.5%\nBig moves (5%+ in 24h): MEM4 +9.1%, MEM1 +6.5%\n\nGameFi: GAM1, GAM2, GAM3, GAM4, GAM5\nRWA: REA1, REA2, REA3, REA4, REA5\nMemes: MEM1, MEM2, MEM3, MEM4, MEM5\nDePIN: DEP1, DEP2, DEP3, DEP4, DEP5\nAI: ART1, ART2, ART3, ART4, ART5\nL1: LAY1, LAY2, LAY3, LAY4, LAY5",
+ "post_markdown": "**Crypto market update**\n\n- \u25b2 **Bitcoin** $64,250.00 (+1.8%)\n- \u25bc **Ethereum** $3,120.50 (-0.6%)\n- \u25b2 **Solana** $148.20 (+3.4%)\n\nTotal market cap $2.55T (+0.8% 24h), BTC dominance 52.3%\n\n24h sentiment across BTC/ETH/SOL: **bullish**\nStrongest sector (average 24h change): **Memes** +2.5%\nBig moves (5%+ in 24h): MEM4 +9.1%, MEM1 +6.5%\n\n- **GameFi:** GAM1, GAM2, GAM3, GAM4, GAM5\n- **RWA:** REA1, REA2, REA3, REA4, REA5\n- **Memes:** MEM1, MEM2, MEM3, MEM4, MEM5\n- **DePIN:** DEP1, DEP2, DEP3, DEP4, DEP5\n- **AI:** ART1, ART2, ART3, ART4, ART5\n- **L1:** LAY1, LAY2, LAY3, LAY4, LAY5",
+ "prices": {
+  "bitcoin": {
+   "market_cap": 1260000000000.0,
+   "name": "Bitcoin",
+   "sparkline": [
+    61500.0,
+    61758.28,
+    61986.31,
+    62158.62,
+    62258.54,
+    62280.81,
+    62232.45,
+    62131.62,
+    62004.77,
+    61882.46,
+    61794.52,
+    61765.37,
+    61810.13,
+    61932.27,
+    62123.03,
+    62362.83,
+    62624.33,
+    62876.78,
+    63090.85,
+    63243.26,
+    63320.5,
+    63320.88,
+    63254.89,
+    63143.46,
+    63014.71,
+    62899.51,
+    62826.56,
+    62817.92,
+    62885.47,
+    63029.08,
+    63236.61,
+    63485.81,
+    63747.88,
+    63991.96,
+    64190.06,
+    64321.41,
+    64375.83,
+    64355.23,
+    64273.4,
+    64153.8,
+    64025.82,
+    63920.21
+   ],
+   "symbol": "BTC",
+   "usd": 64250.0,
+   "usd_1h_change": 0.1,
+   "usd_24h_change": 1.8,
+   "usd_7d_change": 4.2,
+   "volume": 24000000000.0
+  },
+  "ethereum": {
+   "market_cap": 375000000000.0,
+   "name": "Ethereum",
+   "sparkline": [
+    3170.0,
+    3183.67,
+    3195.0,
+    3202.02,
+    3203.44,
+    3198.86,
+    3188.82,
+    3174.72,
+    3158.61,
+    3142.85,
+    3129.75,
+    3121.2,
+    3118.36,
+    3121.5,
+    3129.95,
+    3142.18,
+    3156.1,
+    3169.32,
+    3179.57,
+    3185.05,
+    3184.72,
+    3178.45,
+    3167.04,
+    3152.13,
+    3135.87,
+    3120.66,
+    3108.72,
+    3101.75,
+    3100.67,
+    3105.47,
+    3115.22,
+    3128.18,
+    3142.14,
+    3154.71,
+    3163.73,
+    3167.58,
+    3165.49,
+    3157.59,
+    3144.96,
+    3129.41,
+    3113.22,
+    3098.75
+   ],
+   "symbol": "ETH",
+   "usd": 3120.5,
+   "usd_1h_change": -0.2,
+   "usd_24h_change": -0.6,
+   "usd_7d_change": -1.5,
+   "volume": 13000000000.0
+  },
+  "solana": {
+   "market_cap": 69000000000.0,
+   "name": "Solana",
+   "sparkline": [
+    136.0,
+    137.35,
+    138.54,
+    139.42,
+    139.9,
+    139.95,
+    139.61,
+    138.98,
+    138.2,
+    137.45,
+    136.89,
+    136.66,
+    136.83,
+    137.43,
+    138.41,
+    139.66,
+    141.04,
+    142.36,
+    143.47,
+    144.24,
+    144.59,
+    144.52,
+    144.08,
+    143.39,
+    142.6,
+    141.89,
+    141.42,
+    141.3,
+    141.59,
+    142.32,
+    143.39,
+    144.69,
+    146.07,
+    147.34,
+    148.36,
+    149.02,
+    149.24,
+    149.06,
+    148.53,
+    147.8,
+    147.01,
+    146.36
+   ],
+   "symbol": "SOL",
+   "usd": 148.2,
+   "usd_1h_change": 0.4,
+   "usd_24h_change": 3.4,
+   "usd_7d_change": 8.9,
+   "volume": 3100000000.0
+  }
+ },
+ "sector_details": {
+  "AI": [
+   {
+    "change_1h": null,
+    "change_24h": 3.8,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 1000000000.0,
+    "name": "Sample coin ART1",
+    "price": 10.0,
+    "sparkline": [],
+    "symbol": "ART1",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 1.9,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 500000000.0,
+    "name": "Sample coin ART2",
+    "price": 5.0,
+    "sparkline": [],
+    "symbol": "ART2",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -0.7,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 333333333.3333333,
+    "name": "Sample coin ART3",
+    "price": 3.3333,
+    "sparkline": [],
+    "symbol": "ART3",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 4.4,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 250000000.0,
+    "name": "Sample coin ART4",
+    "price": 2.5,
+    "sparkline": [],
+    "symbol": "ART4",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 2.6,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 200000000.0,
+    "name": "Sample coin ART5",
+    "price": 2.0,
+    "sparkline": [],
+    "symbol": "ART5",
+    "volume": null
+   }
+  ],
+  "DePIN": [
+   {
+    "change_1h": null,
+    "change_24h": -0.9,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 1000000000.0,
+    "name": "Sample coin DEP1",
+    "price": 10.0,
+    "sparkline": [],
+    "symbol": "DEP1",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 2.2,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 500000000.0,
+    "name": "Sample coin DEP2",
+    "price": 5.0,
+    "sparkline": [],
+    "symbol": "DEP2",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 1.4,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 333333333.3333333,
+    "name": "Sample coin DEP3",
+    "price": 3.3333,
+    "sparkline": [],
+    "symbol": "DEP3",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -2.6,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 250000000.0,
+    "name": "Sample coin DEP4",
+    "price": 2.5,
+    "sparkline": [],
+    "symbol": "DEP4",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 0.5,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 200000000.0,
+    "name": "Sample coin DEP5",
+    "price": 2.0,
+    "sparkline": [],
+    "symbol": "DEP5",
+    "volume": null
+   }
+  ],
+  "GameFi": [
+   {
+    "change_1h": null,
+    "change_24h": 2.1,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 1000000000.0,
+    "name": "Sample coin GAM1",
+    "price": 10.0,
+    "sparkline": [],
+    "symbol": "GAM1",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -1.2,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 500000000.0,
+    "name": "Sample coin GAM2",
+    "price": 5.0,
+    "sparkline": [],
+    "symbol": "GAM2",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 0.8,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 333333333.3333333,
+    "name": "Sample coin GAM3",
+    "price": 3.3333,
+    "sparkline": [],
+    "symbol": "GAM3",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -3.4,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 250000000.0,
+    "name": "Sample coin GAM4",
+    "price": 2.5,
+    "sparkline": [],
+    "symbol": "GAM4",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 1.5,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 200000000.0,
+    "name": "Sample coin GAM5",
+    "price": 2.0,
+    "sparkline": [],
+    "symbol": "GAM5",
+    "volume": null
+   }
+  ],
+  "L1": [
+   {
+    "change_1h": null,
+    "change_24h": 1.2,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 1000000000.0,
+    "name": "Sample coin LAY1",
+    "price": 10.0,
+    "sparkline": [],
+    "symbol": "LAY1",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -0.4,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 500000000.0,
+    "name": "Sample coin LAY2",
+    "price": 5.0,
+    "sparkline": [],
+    "symbol": "LAY2",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 0.6,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 333333333.3333333,
+    "name": "Sample coin LAY3",
+    "price": 3.3333,
+    "sparkline": [],
+    "symbol": "LAY3",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 2.0,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 250000000.0,
+    "name": "Sample coin LAY4",
+    "price": 2.5,
+    "sparkline": [],
+    "symbol": "LAY4",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -1.1,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 200000000.0,
+    "name": "Sample coin LAY5",
+    "price": 2.0,
+    "sparkline": [],
+    "symbol": "LAY5",
+    "volume": null
+   }
+  ],
+  "Memes": [
+   {
+    "change_1h": null,
+    "change_24h": 6.5,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 1000000000.0,
+    "name": "Sample coin MEM1",
+    "price": 10.0,
+    "sparkline": [],
+    "symbol": "MEM1",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -4.8,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 500000000.0,
+    "name": "Sample coin MEM2",
+    "price": 5.0,
+    "sparkline": [],
+    "symbol": "MEM2",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 3.2,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 333333333.3333333,
+    "name": "Sample coin MEM3",
+    "price": 3.3333,
+    "sparkline": [],
+    "symbol": "MEM3",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 9.1,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 250000000.0,
+    "name": "Sample coin MEM4",
+    "price": 2.5,
+    "sparkline": [],
+    "symbol": "MEM4",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -1.7,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 200000000.0,
+    "name": "Sample coin MEM5",
+    "price": 2.0,
+    "sparkline": [],
+    "symbol": "MEM5",
+    "volume": null
+   }
+  ],
+  "RWA": [
+   {
+    "change_1h": null,
+    "change_24h": 0.4,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 1000000000.0,
+    "name": "Sample coin REA1",
+    "price": 10.0,
+    "sparkline": [],
+    "symbol": "REA1",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 0.9,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 500000000.0,
+    "name": "Sample coin REA2",
+    "price": 5.0,
+    "sparkline": [],
+    "symbol": "REA2",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": -0.2,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 333333333.3333333,
+    "name": "Sample coin REA3",
+    "price": 3.3333,
+    "sparkline": [],
+    "symbol": "REA3",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 1.1,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 250000000.0,
+    "name": "Sample coin REA4",
+    "price": 2.5,
+    "sparkline": [],
+    "symbol": "REA4",
+    "volume": null
+   },
+   {
+    "change_1h": null,
+    "change_24h": 0.3,
+    "change_7d": null,
+    "id": null,
+    "market_cap": 200000000.0,
+    "name": "Sample coin REA5",
+    "price": 2.0,
+    "sparkline": [],
+    "symbol": "REA5",
+    "volume": null
+   }
+  ]
+ },
+ "sector_stats": {
+  "AI": {
+   "avg_change_24h": 2.4,
+   "best": {
+    "change_24h": 4.4,
+    "symbol": "ART4"
+   },
+   "down": 1,
+   "total": 5,
+   "up": 4,
+   "worst": {
+    "change_24h": -0.7,
+    "symbol": "ART3"
+   }
+  },
+  "DePIN": {
+   "avg_change_24h": 0.12,
+   "best": {
+    "change_24h": 2.2,
+    "symbol": "DEP2"
+   },
+   "down": 2,
+   "total": 5,
+   "up": 3,
+   "worst": {
+    "change_24h": -2.6,
+    "symbol": "DEP4"
+   }
+  },
+  "GameFi": {
+   "avg_change_24h": -0.04,
+   "best": {
+    "change_24h": 2.1,
+    "symbol": "GAM1"
+   },
+   "down": 2,
+   "total": 5,
+   "up": 3,
+   "worst": {
+    "change_24h": -3.4,
+    "symbol": "GAM4"
+   }
+  },
+  "L1": {
+   "avg_change_24h": 0.46,
+   "best": {
+    "change_24h": 2.0,
+    "symbol": "LAY4"
+   },
+   "down": 2,
+   "total": 5,
+   "up": 3,
+   "worst": {
+    "change_24h": -1.1,
+    "symbol": "LAY5"
+   }
+  },
+  "Memes": {
+   "avg_change_24h": 2.46,
+   "best": {
+    "change_24h": 9.1,
+    "symbol": "MEM4"
+   },
+   "down": 2,
+   "total": 5,
+   "up": 3,
+   "worst": {
+    "change_24h": -4.8,
+    "symbol": "MEM2"
+   }
+  },
+  "RWA": {
+   "avg_change_24h": 0.5,
+   "best": {
+    "change_24h": 1.1,
+    "symbol": "REA4"
+   },
+   "down": 1,
+   "total": 5,
+   "up": 4,
+   "worst": {
+    "change_24h": -0.2,
+    "symbol": "REA3"
+   }
+  }
+ },
+ "sectors": {
+  "AI": [
+   "ART1",
+   "ART2",
+   "ART3",
+   "ART4",
+   "ART5"
+  ],
+  "DePIN": [
+   "DEP1",
+   "DEP2",
+   "DEP3",
+   "DEP4",
+   "DEP5"
+  ],
+  "GameFi": [
+   "GAM1",
+   "GAM2",
+   "GAM3",
+   "GAM4",
+   "GAM5"
+  ],
+  "L1": [
+   "LAY1",
+   "LAY2",
+   "LAY3",
+   "LAY4",
+   "LAY5"
+  ],
+  "Memes": [
+   "MEM1",
+   "MEM2",
+   "MEM3",
+   "MEM4",
+   "MEM5"
+  ],
+  "RWA": [
+   "REA1",
+   "REA2",
+   "REA3",
+   "REA4",
+   "REA5"
+  ]
+ },
+ "sentiment": "bullish",
+ "stale": false,
+ "trending": [
+  {
+   "change_24h": 18.4,
+   "id": "sample-a",
+   "name": "Sample trending A",
+   "rank": 120,
+   "symbol": "TRA"
+  },
+  {
+   "change_24h": -6.2,
+   "id": "sample-b",
+   "name": "Sample trending B",
+   "rank": 340,
+   "symbol": "TRB"
+  },
+  {
+   "change_24h": 3.1,
+   "id": "sample-c",
+   "name": "Sample trending C",
+   "rank": 55,
+   "symbol": "TRC"
+  }
+ ]
+}

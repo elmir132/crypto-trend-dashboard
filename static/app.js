@@ -2,6 +2,8 @@
 // Every value from the server is placed with textContent or setAttribute, never by building HTML strings.
 
 const $ = (id) => document.getElementById(id);
+// In the static demo (docs/) there is no server: the page reads a prepared summary.json instead.
+const DEMO = document.body.dataset.demo === "true";
 const SVG_NS = "http://www.w3.org/2000/svg";
 let latest = null;
 let timer = null;
@@ -118,11 +120,64 @@ function renderMovers(data) {
   }
 }
 
+function renderOverview(data) {
+  const box = $("overview");
+  box.replaceChildren();
+  const o = data.overview;
+  if (!o) {
+    box.append(el("p", { class: "muted", text: "Whole-market figures are not available right now." }));
+    return;
+  }
+  const cards = [
+    ["Total market cap", fmtBig(o.total_market_cap), badge("24h", o.market_cap_change_24h)],
+    ["24h volume", fmtBig(o.total_volume), null],
+    ["Bitcoin share of the market", o.btc_dominance === null ? "n/a" : `${o.btc_dominance.toFixed(1)}%`, null],
+    ["Ethereum share of the market", o.eth_dominance === null ? "n/a" : `${o.eth_dominance.toFixed(1)}%`, null],
+    ["Coins tracked by CoinGecko", o.active_coins === null ? "n/a" : o.active_coins.toLocaleString("en-US"), null],
+  ];
+  for (const [label, value, extra] of cards) {
+    box.append(el("article", { class: "card" }, el("h3", { text: label }), el("div", { class: "price", text: value }), extra));
+  }
+}
+
+function renderAlerts(data) {
+  const box = $("alerts");
+  box.replaceChildren();
+  const { threshold, coins } = data.alerts;
+  box.append(el("div", { class: "muted small", text: `Coins that moved ${threshold}% or more in 24h, among the coins on this page:` }));
+  if (!coins.length) {
+    box.append(el("p", { class: "muted", text: "None right now." }));
+    return;
+  }
+  const row = el("div", {});
+  for (const coin of coins) row.append(el("span", { class: `chip ${coin.direction}`, text: `${arrow(coin.change_24h)} ${coin.symbol} ${fmtPct(coin.change_24h)}${coin.sector ? " · " + coin.sector : ""}` }));
+  box.append(row);
+}
+
+function renderTrending(data) {
+  const box = $("trending");
+  box.replaceChildren();
+  if (!data.trending.length) {
+    box.append(el("p", { class: "muted", text: "Trending coins are not available right now." }));
+    return;
+  }
+  const ul = el("ul", { class: "plain" });
+  for (const coin of data.trending) {
+    ul.append(el("li", {}, el("span", { text: `${coin.symbol} ${coin.name ? "· " + coin.name : ""}${coin.rank ? " · rank #" + coin.rank : ""}` }),
+      el("span", { class: dir(coin.change_24h), text: `${arrow(coin.change_24h)} ${fmtPct(coin.change_24h)}` })));
+  }
+  box.append(ul);
+}
+
 const COLORS = ["#0b5cff", "#d97706", "#7c3aed", "#0f766e", "#be185d"];
 
 async function renderHistory() {
   const box = $("history");
   box.replaceChildren();
+  if (DEMO) {
+    box.append(el("p", { class: "muted", text: "History is not part of the static demo. Run the app yourself and it saves snapshots on your machine." }));
+    return;
+  }
   let body;
   try {
     const res = await fetch("/api/history?hours=24");
@@ -167,6 +222,7 @@ function setStatus(data) {
   if (data.mock) text += " · sample data for the offline demo, not real prices";
   else if (data.stale) text += " · showing cached data because CoinGecko did not answer";
   else text += ` · live data, cached up to ${data.cache_ttl}s`;
+  if (DEMO) text += " · static demo";
   $("status").textContent = text;
   const banner = $("banner");
   const notes = [...data.errors];
@@ -178,11 +234,11 @@ function setStatus(data) {
 async function load() {
   $("status").textContent = "Loading…";
   try {
-    const res = await fetch("/api/summary");
+    const res = await fetch(DEMO ? "summary.json" : "/api/summary");
     const data = await res.json();
     latest = data;
     setStatus(data);
-    renderHeadline(data); renderMood(data); renderSectors(data); renderMovers(data);
+    renderHeadline(data); renderOverview(data); renderMood(data); renderSectors(data); renderAlerts(data); renderMovers(data); renderTrending(data);
     $("post").textContent = data.post || "No data available.";
     await renderHistory();
   } catch (e) {
@@ -215,6 +271,7 @@ function applyTheme(theme) {
   if (theme === "light" || theme === "dark") document.documentElement.setAttribute("data-theme", theme);
 }
 
+if (DEMO) $("csv").remove();
 $("refresh").addEventListener("click", load);
 $("auto").addEventListener("change", () => { safeStorage(() => localStorage.setItem("auto", $("auto").value)); schedule(); });
 $("copy-text").addEventListener("click", () => latest && copy(latest.post, "Text"));
