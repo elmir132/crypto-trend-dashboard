@@ -4,12 +4,27 @@ from flask import Flask, Response, jsonify, render_template, request
 
 import history as history_module
 import market
+from refresher import Refresher
 
 CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
        "connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
 
 
-def create_app(history_store=None):
+def refresh_interval_from_env(env=None):
+    """Seconds between background refreshes: REFRESH_INTERVAL, at least 60 and never shorter
+    than the cache lifetime (refreshing faster than the cache expires would do nothing).
+    0 means off, which is the default; so is sample-data mode and any value that is not a number."""
+    env = os.environ if env is None else env
+    if env.get("MOCK_DATA") == "1":
+        return 0
+    try:
+        wanted = int(env.get("REFRESH_INTERVAL", "0"))
+    except ValueError:
+        return 0
+    return 0 if wanted <= 0 else max(wanted, 60, market.CACHE_TTL)
+
+
+def create_app(history_store=None, refresh_interval=None):
     market.configure()
     store = history_store if history_store is not None else history_module.from_env()
     app = Flask(__name__)
@@ -23,6 +38,9 @@ def create_app(history_store=None):
                 app.logger.warning("could not save history: %s", exc)
                 data["errors"].append("History could not be saved (see the server log).")
         return data
+
+    interval = refresh_interval_from_env() if refresh_interval is None else refresh_interval
+    app.refresher = Refresher(summary_or_none, interval).start() if interval > 0 else None
 
     @app.after_request
     def security_headers(response):
@@ -74,7 +92,9 @@ def create_app(history_store=None):
 
     @app.route("/healthz")
     def healthz():
-        return jsonify(ok=True)
+        if app.refresher is None:
+            return jsonify(ok=True)
+        return jsonify(ok=True, refresher=app.refresher.status())
 
     return app
 

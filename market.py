@@ -644,6 +644,7 @@ def build_summary():
                     trending = value
     finally:
         _stale_log.reset(token)
+    errors = list(dict.fromkeys(errors))   # one message per problem, however many requests hit it
     headline = headline_list(prices)
     stats = sector_stats(details)
     sectors = {name: [c["symbol"] for c in coins] for name, coins in details.items()}

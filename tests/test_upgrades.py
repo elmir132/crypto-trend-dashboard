@@ -188,3 +188,11 @@ def test_different_keys_are_still_fetched_in_parallel(monkeypatch):
     for t in threads:
         t.join(5)
     assert len(started) == 2
+
+
+def test_a_repeated_error_message_is_shown_once(monkeypatch):
+    monkeypatch.setattr(market.requests, "get", lambda *a, **k: Resp(status=429))
+    summary = market.build_summary()
+    assert not summary["ok"]
+    assert len(summary["errors"]) == len(set(summary["errors"])) >= 1
+    assert any("HTTP 429" in e or "rate limiting" in e for e in summary["errors"])
