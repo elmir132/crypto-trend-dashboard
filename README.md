@@ -4,6 +4,8 @@ A small Flask app that builds a paste-ready crypto market update: BTC / ETH / SO
 
 I wrote the first version earlier as a personal tool for drafting market posts (it combined a CoinGecko/CoinMarketCap Flask backend with a small BTC price page). In October 2026 I rewrote it: the original sector grouping never actually matched anything (it relied on a category field the API does not return) and padded sectors with unrelated coins, and it hardcoded API keys. The rewrite fixes that.
 
+![Screenshot of the dashboard](docs/screenshot.png)
+
 ## What it does
 
 - `GET /api/summary` returns prices, sentiment, sector tickers and the formatted post as JSON.

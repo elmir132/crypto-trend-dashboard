@@ -51,7 +51,9 @@ def _get(path, params):
     except (requests.RequestException, ValueError) as exc:
         if hit:  # serve stale data rather than failing (e.g. on HTTP 429)
             return hit[1]
-        raise UpstreamError(f"CoinGecko request to {path} failed: {exc}") from exc
+        status = getattr(getattr(exc, "response", None), "status_code", None)
+        reason = f"HTTP {status}" if status else type(exc).__name__
+        raise UpstreamError(f"CoinGecko {path} failed ({reason})") from exc
     _cache[key] = (time.time(), data)
     return data
 
